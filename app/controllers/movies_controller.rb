@@ -13,12 +13,31 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.pluck(:rating).uniq
     # @movies = Movie.find(:all, :order => (params[:sort]))
-    @movies = Movie.all.order(params[:sort])
     @hilite_column = params[:sort]
+    @movies = Movie.all
     
-    if params[:ratings]
+    if params[:ratings] && params[:sort]
       @movies = Movie.where(rating: params[:ratings].keys).all.order(params[:sort])
+    elsif params[:ratings]
+      @movies = Movie.where(rating: params[:ratings].keys)
+      session[:ratings] = params[:ratings]
+    elsif params[:sort]
+      @movies = Movie.all.order(params[:sort])
+      session[:sort] = params[:sort]
+    elsif session[:ratings] && session[:sort]
+      # @ratings = session[:ratings]
+      # @sort = session[:sort]
+      flash.keep
+      redirect_to movies_path :ratings => session[:ratings], :sort => session[:sort]
+    elsif session[:ratings]
+      flash.keep
+      redirect_to movies_path :ratings => session[:ratings]
+    elsif session[:sort] 
+      flash.keep
+      redirect_to movies_path  :sort => session[:sort]
     end
+    
+    
     
   end
 
