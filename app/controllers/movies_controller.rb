@@ -18,6 +18,14 @@ class MoviesController < ApplicationController
     @hilite_column = params[:sort]
     @movies = Movie.all
     
+    if params[:ratings].nil? && session[:ratings].nil?
+      @set_ratings = {}
+      @all_ratings.each do 
+        |rating| @set_ratings[rating] = 1
+      end
+    end
+    
+  
     if params[:ratings] && params[:sort]
       @movies = Movie.where(rating: params[:ratings].keys).all.order(params[:sort])
     elsif params[:ratings] && session[:sort]
@@ -46,7 +54,7 @@ class MoviesController < ApplicationController
       redirect_to movies_path  :sort => session[:sort]
     end
     
-    @ratings_filter = session[:ratings]
+    @set_ratings = session[:ratings]
     
   end
 
