@@ -6,7 +6,8 @@
   - @all_ratings.each do |rating|
     = rating
     // = check_box_tag "ratings[#{rating}]", :id => 'ratings_#{rating}'
-    = check_box_tag "ratings[#{rating}]", 1, (true if @ratings_filter[rating]), :id => 'ratings_#{rating}'
+    // = check_box_tag "ratings[#{rating}]", 1, (true if @ratings_filter[rating] || @ratings_filter.nil?), :id => 'ratings_#{rating}'
+    = check_box_tag "ratings[#{rating}]", 1, (true if @ratings_filter.nil?), :id => 'ratings_#{rating}'
   = submit_tag 'Refresh', :id => 'ratings_submit'
     
 %table#movies
